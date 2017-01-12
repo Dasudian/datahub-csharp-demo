@@ -1,9 +1,11 @@
 ﻿using com.dasudian.iot.sdk;
+using DataHubDemo.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -16,8 +18,8 @@ namespace DataHubDemo
         {
             InitializeComponent();
         }
-        private static Image PICTURE_OK = global::DataHubDemo.Properties.Resources.ok;
-        private static Image PICTURE_NG = global::DataHubDemo.Properties.Resources.ng;
+        private static Image PICTURE_OK = Resources.ok;
+        private static Image PICTURE_NG = Resources.ng;
         private DataHubClient client = null;
         private int subMessageId;
         private int unsubMessageId;
@@ -41,14 +43,39 @@ namespace DataHubDemo
             // 客户端名字，可以填写任意的utf-8字符。
             // 如果你有第三账号系统，并想将自己的账号系统与大数点服务器同步，那么你可以使用第三方账号的名字、昵称。
             // 如果没有自己的账号系统，或者对该客户端名字不关心，可以使用随机的名字，但是不能填null。
-            string userName = Guid.NewGuid().ToString();
+            string clientName = null;
+            if (this.checkBox_random_clientname.Checked)
+            {
+                clientName = Guid.NewGuid().ToString();
+            }
+            else
+            {
+                clientName = this.textBox_userName.Text;
+            }
+             
 
             // 客户端id，用于服务器唯一标记一个客户端，服务器通过该id向客户端推送消息;
             // 注意：不同的客户端的id不能相同，如果有两个相同的客户端id，服务器会关闭掉其中的一个客户端的连接。
             // 你可以使用设备的mac地址，或者第三方账号系统的id（比如qq号，微信号）。
             // 如果没有自己的账号系统，则可以随机生成一个不会重复的客户端id。
             // 或者自己指定客户端的id，只要能保证不同客户端id不同即可。
-            string clientId = userName;
+            string clientId = null;
+            if (this.checkBox_clientid.Checked)
+            {
+                clientId = Guid.NewGuid().ToString();
+            }
+            else
+            {
+                clientId = this.textBox_clientId.Text;
+            }
+            if (clientId == null || clientId.Length == 0 ||
+                clientName == null || clientName.Length == 0 ||
+                instanceId == null || instanceId.Length == 0 ||
+                instanceKey == null || instanceKey.Length == 0)
+            {
+                MessageBox.Show("clientId，clientName，instanceId，instanceKey不能为空");
+                return;
+            }
 
             // 通过DataHubClient的Builder方法获取DataHubClient实例。
             // 在创建DataHubClient时，可以设置自己的配置参数，如果不设置，则使用SDK默认的设置。
@@ -57,7 +84,12 @@ namespace DataHubDemo
             // 配置2：SetSecure是否加密传输，默认为fasle，表示不加密。
             // 配置3：SetServerURI设置服务器地址，默认为公有云测试服务器地址。
             // 配置4：SetCleanSession是否清除会话。即断开连接后，服务器是否保存该客户端（客户端通过客户端id来标记）订阅的topic。
-            client = new DataHubClient.Builder(instanceId, instanceKey, userName, clientId).SetServerURI(serverURI).Build();
+            bool cleansession = this.clean_session.Checked;
+            bool secure = this.checkBox_Secure.Checked;
+            bool autoReconnect = this.auto_reconnect.Checked;
+            client = new DataHubClient.Builder(instanceId, instanceKey, clientName, clientId)
+                .SetAutomaticReconnect(autoReconnect).SetCleanSession(cleansession).SetSecure(secure)
+                .SetServerURI(serverURI).Build();
 
             // 与大数点服务器建立一个长连接,连接成功返回0，连接失败返回错误码。
             // 注意：如果设置了自动重连，如果是由于网络异常（错误码0x06）导致的错误，
@@ -115,6 +147,19 @@ namespace DataHubDemo
 
         void client_MessageReceived(object sender, MessageEventArgs e)
         {
+            if (this.checkBox_save_tofile.Checked)
+            {
+                using (FileStream fs = new FileStream("message.txt", FileMode.OpenOrCreate))
+                {
+                    StreamWriter w = new StreamWriter(fs);
+                    w.BaseStream.Seek(0, SeekOrigin.End);
+                    w.WriteLine("topic:" + e.Topic);
+                    w.WriteLine("payload:" + Encoding.UTF8.GetString(e.Message));
+                    w.Flush();
+                    w.Close();
+                }
+            }
+
             if (this.InvokeRequired)// 判断是否是UI线程
             {
                 MessageDelegate d = new MessageDelegate(this.MessageReceived);
@@ -286,5 +331,30 @@ namespace DataHubDemo
                 }
             }
         }
+
+        private void checkBox_random_clientname_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.checkBox_random_clientname.Checked)
+            {
+                this.textBox_userName.ReadOnly = true;
+            }
+            else
+            {
+                this.textBox_userName.ReadOnly = false;
+            }
+        }
+
+        private void checkBox_clientid_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.checkBox_clientid.Checked)
+            {
+                this.textBox_clientId.ReadOnly = true;
+            }
+            else
+            {
+                this.textBox_clientId.ReadOnly = false;
+            }
+        }
+ 
     }
 }
