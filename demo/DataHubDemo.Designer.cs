@@ -392,8 +392,6 @@
             // clean_session
             // 
             this.clean_session.AutoSize = true;
-            this.clean_session.Checked = true;
-            this.clean_session.CheckState = System.Windows.Forms.CheckState.Checked;
             this.clean_session.Location = new System.Drawing.Point(134, 173);
             this.clean_session.Name = "clean_session";
             this.clean_session.Size = new System.Drawing.Size(72, 16);
