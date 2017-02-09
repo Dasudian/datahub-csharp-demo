@@ -209,7 +209,7 @@ public int Unsubscribe(string topic)
 /// 发送异步消息
 /// </summary>
 /// <param name="topic">主题名</param>
-/// <param name="message">消息内容</param>
+/// <param name="message">消息内容;最大支持消息长度为512k，超过该长度的消息将不能发送到服务器。</param>
 /// <param name="qos">服务质量</param>
 /// <returns>成功：返回消息id，可在Published回调函数中确定消息是否发送成功；
 /// 失败：返回错误码，在文档最后查看错误码。</returns>
@@ -223,7 +223,7 @@ public int Publish(string topic, byte[] message, byte qos)
 /// 发送同步请求
 /// </summary>
 /// <param name="topic">主题名</param>
-/// <param name="message">消息内容</param>
+/// <param name="message">消息内容;最大支持消息长度为512k，超过该长度的消息将不能发送到服务器。</param>
 /// <param name="qos">服务质量</param>
 /// <param name="timeout">超时时间，多长时间没有收到服务的应答视为超时，单位ms</param>
 /// <returns>返回结果码：成功：Constants.SUCCESS；失败：Constants.ERROR_SERVER_NOT_CONNECTED(服务器未连接),
