@@ -28,7 +28,8 @@ namespace DatahubDemo
         {
             string clientName = Guid.NewGuid().ToString();
             string clientId = clientName;
-            DataHubClient client = new DataHubClient.Builder(instanceId, instanceKey, clientName, clientId).SetServerURL(serverURL).Build();
+            DataHubClient client = new DataHubClient.Builder(instanceId, instanceKey, clientName, clientId)
+                .SetServerURL(serverURL).Build();
 
             Message message = new Message();
             message.payload = Encoding.UTF8.GetBytes("hello world");

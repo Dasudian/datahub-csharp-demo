@@ -1,4 +1,4 @@
-# Dasudian IoT DataHub Java SDK
+# Dasudian IoT DataHub C# SDK
 
 1. [版本信息](#version)
 2. [集成前准备](#ready)
@@ -126,6 +126,7 @@ public int Subscribe(string topic, long timeout)
 /// <param name="timeout">超时时间，单位s，必须大于0。表示该函数最多阻塞多长时间。对于普通的文本消息，建议超时时间为10s。
 /// 注意：该函数超时返回不代表消息发送失败，仅表示在指定时间内没有接收到服务器的应答。</param>
 /// <returns>成功：返回Constants.ERROR_NONE；失败：返回错误码</returns>
+public int Unsubscribe(string topic, long timeout)
 ```
 
 ## <a name="publish">异步发布</a>
@@ -141,6 +142,7 @@ public int Subscribe(string topic, long timeout)
 /// <param name="qos">服务质量</param>
 /// <returns>成功：消息成功递交给SDK，SDK会根据设置的qos等级来发送消息，但是不提供发送成功或失败的结果的回调函数。
 /// 失败：消息递交给SDK失败</returns>
+public int Publish(string topic, Message message, byte qos)
 ```
 
 ## <a name="sendRequest">同步发布</a>
@@ -157,6 +159,7 @@ public int Subscribe(string topic, long timeout)
 /// <param name="timeout">超时时间，单位s，必须大于0。表示该函数最多阻塞多长时间。对于普通的文本消息，建议超时时间为10s。
 /// 注意：该函数超时返回不代表消息发送失败，仅表示在指定时间内没有接收到服务器的应答。</param>
 /// <returns>成功：返回Constants.ERROR_NONE；失败：返回错误码</returns>
+public int SendRequest(string topic, Message message, byte qos, long timeout)
 ```
 
 ## <a name="destroy">销毁</a>
