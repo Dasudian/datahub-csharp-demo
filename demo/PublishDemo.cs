@@ -17,17 +17,29 @@ namespace DatahubDemo
         {
             string userName = Guid.NewGuid().ToString();
             string clientId = userName;
-            // create a DataHubClient client by DataHubClient.Builder
             DataHubClient client = new DataHubClient.Builder(instanceId, instanceKey, userName, clientId)
                 .SetServerURL(serverURL).Build();
-            // Asynchronous send message
+
+            client.MessageDelivered += client_MessageDelivered;
+
             Message message = new Message();
             message.payload = Encoding.UTF8.GetBytes("hello world");
-            int messageId = client.Publish("test", message, DataHubClient.QOS_LEVEL_EXACTLY_ONCE);
+            int messageId;
+            int ret = client.Publish("test", message, DataHubClient.QOS_LEVEL_EXACTLY_ONCE, out messageId);
             Console.WriteLine("messageId = " + messageId);
             Thread.Sleep(5000);
             // disconnect server
             client.Destroy();
+        }
+
+        /// <summary>
+        /// 异步发送结果回调函数
+        /// </summary>
+        /// <param name="messageId">消息ID,在调用publish时通过参数返回的消息id</param>
+        /// <param name="result">成功：true；失败：false</param>
+        static void client_MessageDelivered(int messageId, bool result)
+        {
+            Console.WriteLine("messageId=" + messageId + ", result=" + result);
         }
     }
 }

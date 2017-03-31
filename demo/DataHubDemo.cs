@@ -242,7 +242,8 @@ namespace DataHubDemo
             }
             com.dasudian.iot.sdk.Message message = new com.dasudian.iot.sdk.Message();
             message.payload = Encoding.UTF8.GetBytes(payload);
-            client.Publish(topic, message, qos);
+            int messageId;
+            client.Publish(topic, message, qos, out messageId);
         }
 
 
