@@ -20,6 +20,7 @@
 
 | Date | Version | Note |
 |---|---|---|
+| 2017.3.31 | 2.1.0 | 修改了异步发送消息函数，添加了异步发送结果回调函数 |
 | 2017.3.27 | 2.0.0 | 客户端全面升级，版本更新为2.0.0 |
 
 
@@ -140,9 +141,10 @@ public int Unsubscribe(string topic, long timeout)
 /// <param name="topic">主题名</param>
 /// <param name="message">消息内容；长度必须小于512k。</param>
 /// <param name="qos">服务质量</param>
+/// <param name="messageId">返回消息ID，可以通过在MessageDelivered回调函数中通过对比ID来确定该条消息的发送结果</param>
 /// <returns>成功：消息成功递交给SDK，SDK会根据设置的qos等级来发送消息，但是不提供发送成功或失败的结果的回调函数。
 /// 失败：消息递交给SDK失败</returns>
-public int Publish(string topic, Message message, byte qos)
+public int Publish(string topic, Message message, byte qos, out int messageId)
 ```
 
 ## <a name="sendRequest">同步发布</a>
