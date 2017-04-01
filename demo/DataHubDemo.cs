@@ -127,15 +127,15 @@ namespace DataHubDemo
             byte qos;
             if (input_qos == 1)
             {
-                qos = DataHubClient.QOS_LEVEL_AT_MOST_ONCE;
+                qos = DataHubClient.QOS_LEVEL_AT_LEAST_ONCE;
             }
             else if (input_qos == 2)
             {
-                qos = DataHubClient.QOS_LEVEL_AT_LEAST_ONCE;
+                qos = DataHubClient.QOS_LEVEL_EXACTLY_ONCE;
             }
             else
             {
-                qos = DataHubClient.QOS_LEVEL_EXACTLY_ONCE;
+                qos = DataHubClient.QOS_LEVEL_AT_MOST_ONCE;
             }
             
             int ret = client.Subscribe(topic, qos);
@@ -230,15 +230,15 @@ namespace DataHubDemo
             byte qos;
             if (input_qos == 1)
             {
-                qos = DataHubClient.QOS_LEVEL_AT_MOST_ONCE;
+                qos = DataHubClient.QOS_LEVEL_AT_LEAST_ONCE;
             }
             else if (input_qos == 2)
             {
-                qos = DataHubClient.QOS_LEVEL_AT_LEAST_ONCE;
+                qos = DataHubClient.QOS_LEVEL_EXACTLY_ONCE;
             }
             else
             {
-                qos = DataHubClient.QOS_LEVEL_EXACTLY_ONCE;
+                qos = DataHubClient.QOS_LEVEL_AT_MOST_ONCE;
             }
             com.dasudian.iot.sdk.Message message = new com.dasudian.iot.sdk.Message();
             message.payload = Encoding.UTF8.GetBytes(payload);
@@ -275,15 +275,15 @@ namespace DataHubDemo
             byte qos;
             if (input_qos == 1)
             {
-                qos = DataHubClient.QOS_LEVEL_AT_MOST_ONCE;
+                qos = DataHubClient.QOS_LEVEL_AT_LEAST_ONCE;
             }
             else if (input_qos == 2)
             {
-                qos = DataHubClient.QOS_LEVEL_AT_LEAST_ONCE;
+                qos = DataHubClient.QOS_LEVEL_EXACTLY_ONCE;
             }
             else
             {
-                qos = DataHubClient.QOS_LEVEL_EXACTLY_ONCE;
+                qos = DataHubClient.QOS_LEVEL_AT_MOST_ONCE;
             }
             com.dasudian.iot.sdk.Message message = new com.dasudian.iot.sdk.Message();
             message.payload = Encoding.UTF8.GetBytes(payload);
