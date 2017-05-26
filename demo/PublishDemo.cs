@@ -3,12 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace DatahubDemo
 {
     class PublishDemo
     {
-        private static string serverURI = "try.iotdatahub.net";
+        private static string serverURL = "tcp://try.iotdatahub.net:1883";
         private static string instanceId = "dsd_9FmYSNiqpFmi69Bui0_A";
         private static string instanceKey = "238f173d6cc0608a";
 
@@ -16,28 +17,29 @@ namespace DatahubDemo
         {
             string userName = Guid.NewGuid().ToString();
             string clientId = userName;
-            // create a DataHubClient client by DataHubClient.Builder
             DataHubClient client = new DataHubClient.Builder(instanceId, instanceKey, userName, clientId)
-                .SetServerURI(serverURI).Build();
-            // set a delegate to receive publish result
-            client.Published += client_Published;
-            // connect server
-            int ret = client.Connect();
-            // Asynchronous send message
-            int messageId = client.Publish("test", Encoding.UTF8.GetBytes("hello world"), DataHubClient.QOS_LEVEL_EXACTLY_ONCE);
+                .SetServerURL(serverURL).Build();
+
+            client.MessageDelivered += client_MessageDelivered;
+
+            Message message = new Message();
+            message.payload = Encoding.UTF8.GetBytes("hello world");
+            int messageId;
+            int ret = client.Publish("test", message, DataHubClient.QOS_LEVEL_EXACTLY_ONCE, out messageId);
             Console.WriteLine("messageId = " + messageId);
+            Thread.Sleep(5000);
             // disconnect server
-            client.Disconnect();
+            client.Destroy();
         }
 
         /// <summary>
-        /// a delegate to
+        /// 异步发送结果回调函数
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        static void client_Published(object sender, PublishedEventArgs e)
+        /// <param name="messageId">消息ID,在调用publish时通过参数返回的消息id</param>
+        /// <param name="result">成功：true；失败：false</param>
+        static void client_MessageDelivered(int messageId, bool result)
         {
-            Console.WriteLine("publish success,messageId = " + e.MessageId);
+            Console.WriteLine("messageId=" + messageId + ", result=" + result);
         }
     }
 }

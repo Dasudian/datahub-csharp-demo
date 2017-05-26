@@ -32,9 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DataHub, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Release\DataHub.dll</HintPath>
+    <Reference Include="dasudian-datahub-sdk.2.1.0">
+      <HintPath>..\lib\dasudian-datahub-sdk.2.1.0.dll</HintPath>
     </Reference>
     <Reference Include="M2Mqtt, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
