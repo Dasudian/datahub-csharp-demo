@@ -119,17 +119,17 @@ namespace DataHubDemo
             }
             string topic = this.text_sub_or_unsub_qos.Text;
             int input_qos = Int32.Parse(this.text_sub_qos.Text);
-            if (topic == null || input_qos < 1 || input_qos > 3)
+            if (topic == null || input_qos < 0 || input_qos > 2)
             {
                 MessageBox.Show("错误的qos或topic");
                 return;
             }
             byte qos;
-            if (input_qos == 1)
+            if (input_qos == 0)
             {
                 qos = DataHubClient.QOS_LEVEL_AT_MOST_ONCE;
             }
-            else if (input_qos == 2)
+            else if (input_qos == 1)
             {
                 qos = DataHubClient.QOS_LEVEL_AT_LEAST_ONCE;
             }
@@ -222,17 +222,17 @@ namespace DataHubDemo
                 MessageBox.Show("topic或消息内容不能为null");
                 return;
             }
-            if (input_qos < 1 || input_qos > 3)
+            if (input_qos < 0 || input_qos > 2)
             {
-                MessageBox.Show("qos只能是1、2、3");
+                MessageBox.Show("qos只能是0、1、2");
                 return;
             }
             byte qos;
-            if (input_qos == 1)
+            if (input_qos == 0)
             {
                 qos = DataHubClient.QOS_LEVEL_AT_MOST_ONCE;
             }
-            else if (input_qos == 2)
+            else if (input_qos == 1)
             {
                 qos = DataHubClient.QOS_LEVEL_AT_LEAST_ONCE;
             }
@@ -266,17 +266,17 @@ namespace DataHubDemo
                 MessageBox.Show("topic或消息内容不能为null");
                 return;
             }
-            if (input_qos < 1 || input_qos > 3)
+            if (input_qos < 0 || input_qos > 2)
             {
-                MessageBox.Show("qos只能是1、2、3");
+                MessageBox.Show("qos只能是0、1、2");
                 return;
             }
             byte qos;
-            if (input_qos == 1)
+            if (input_qos == 0)
             {
                 qos = DataHubClient.QOS_LEVEL_AT_MOST_ONCE;
             }
-            else if (input_qos == 2)
+            else if (input_qos == 1)
             {
                 qos = DataHubClient.QOS_LEVEL_AT_LEAST_ONCE;
             }
