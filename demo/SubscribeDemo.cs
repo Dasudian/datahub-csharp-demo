@@ -8,9 +8,15 @@ namespace DatahubDemo
 {
     class SubscribeDemo
     {
-        private static string serverURI = "try.iotdatahub.net";
-        private static string instanceId = "dsd_9FmYSNiqpFmi69Bui0_A";
-        private static string instanceKey = "238f173d6cc0608a";
+        /// 大数点IoT DataHub云端地址，
+        /// 请联系大数点商务support@dasudian.com获取
+        private string serverURL = "yourServerURL";
+        /// instance id, 标识客户的唯一ID，
+        /// 请联系大数点商务support@dasudian.com获取
+        private string instanceId = "yourInstanceId";
+        /// instance key, 与客户标识相对应的安全密钥，
+        /// 请联系大数点商务support@dasudian.com获取
+        private string instanceKey = "yourInstanceKey";
 
         public static void Subscribe()
         {
@@ -18,30 +24,14 @@ namespace DatahubDemo
             string clientId = userName;
             // create a DataHubClient client by DataHubClient.Builder
             DataHubClient client = new DataHubClient.Builder(instanceId, instanceKey, userName, clientId)
-                .SetServerURI(serverURI).Build();
-
-            // set a delegate to receive subscribe result
-            client.Subscribed += client_Subscribed;
-
-            // connect server
-            int ret = client.Connect();
+                .SetServerURL(serverURL).Build();
 
             // Asynchronous Subscribe a topic
             int messageId = client.Subscribe("test", DataHubClient.QOS_LEVEL_EXACTLY_ONCE);
             Console.WriteLine("messageId:" + messageId);
 
             // disconnect server
-            client.Disconnect();
+            client.Destroy();
         }
-
-        /// <summary>
-        /// 这个代理方法在Subscribe成功后会调用。
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        static void client_Subscribed(object sender, SubscribedEventArgs e)
-        {
-            Console.WriteLine("subscribe success,messageId:" + e.MessageId);
-        } 
     }
 }
