@@ -8,8 +8,6 @@
 
 ## demo目录
 
-下面是各个目录的说明：
-
 - [Publish dmeo](./demo/PublishDemo.cs)
 - [SendRequest demo](./demo/SendRequestDemo.cs)
 - [Subscribe Demo](./demo/SubscribeDemo.cs)
