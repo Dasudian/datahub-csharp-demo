@@ -8,9 +8,15 @@ namespace DatahubDemo
 {
     class SubscribeDemo
     {
-        private static string serverURL = "tcp://try.iotdatahub.net:1883";
-        private static string instanceId = "dsd_9FmYSNiqpFmi69Bui0_A";
-        private static string instanceKey = "238f173d6cc0608a";
+        /// 大数点IoT DataHub云端地址，
+        /// 请联系大数点商务support@dasudian.com获取
+        private string serverURL = "yourServerURL";
+        /// instance id, 标识客户的唯一ID，
+        /// 请联系大数点商务support@dasudian.com获取
+        private string instanceId = "yourInstanceId";
+        /// instance key, 与客户标识相对应的安全密钥，
+        /// 请联系大数点商务support@dasudian.com获取
+        private string instanceKey = "yourInstanceKey";
 
         public static void Subscribe()
         {

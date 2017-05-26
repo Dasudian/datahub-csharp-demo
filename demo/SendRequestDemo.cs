@@ -11,14 +11,15 @@ namespace DatahubDemo
     /// </summary>
     class SendRequestDemo
     {
-        /// <summary>
-        /// 下面的服务器地址、instanceId和instanceKey为大数点公有云测试服务器地址。
-        /// 注意：下面的服务器地址仅仅用于作为demo和简单测试使用，在正式使用大数点datahub服务时，
-        /// 请联系大数点客服人员，获取私有的服务器地址、instanceId和instanceKey。
-        /// </summary>
-        private string serverURL = "tcp://try.iotdatahub.net:1883";// 大数点datahub公有云测试服务器地址
-        private string instanceId = "dsd_9FmYSNiqpFmi69Bui0_A";// 大数点datahub公有云测试instanceId
-        private string instanceKey = "238f173d6cc0608a";// 大数点datahub公有云测试instanceKey
+        /// 大数点IoT DataHub云端地址，
+        /// 请联系大数点商务support@dasudian.com获取
+        private string serverURL = "yourServerURL";
+        /// instance id, 标识客户的唯一ID，
+        /// 请联系大数点商务support@dasudian.com获取
+        private string instanceId = "yourInstanceId";
+        /// instance key, 与客户标识相对应的安全密钥，
+        /// 请联系大数点商务support@dasudian.com获取
+        private string instanceKey = "yourInstanceKey";
 
         public SendRequestDemo()
         {
