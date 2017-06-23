@@ -194,3 +194,13 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+# useless configure
+App.config
+*Properties*
+\.gitattributes
+
+# middle file
+*.swp
+*.swo
+*.o
