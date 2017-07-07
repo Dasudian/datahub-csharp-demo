@@ -25,7 +25,7 @@ namespace ConsoleApplication1
         {
             // 大数点IoT DataHub云端地址，
             // 请联系大数点商务support@dasudian.com获取
-            string serverURL = "yourServerURL";
+            string serverURL = "tcp://www.example.com:1883";
             // instance id, 标识客户的唯一ID，
             // 请联系大数点商务support@dasudian.com获取
             string instanceId = "yourInstanceId";
@@ -42,8 +42,10 @@ namespace ConsoleApplication1
             Trace.AutoFlush = true;
 
             //创建客户端实例
-            client = new DataHubClient.Builder(instanceId, instanceKey, userName, clientId)
-                .SetServerURL(serverURL).SetDebug(true).Build();
+            client = new DataHubClient.Builder(instanceId,
+                    instanceKey, userName, clientId)
+                .SetServerURL(serverURL)
+                .Build();
             //接收到消息的回调函数
             client.MessageReceived += client_MessageReceived;
             //连接状态改变的回调函数
@@ -53,24 +55,19 @@ namespace ConsoleApplication1
             int ret;
             string content = "SendRequest content";
 
-            do
-            {
-                //订阅主题 参数为: topic   超时时间(单位秒)     
-                ret = client.Subscribe(topic, 10);
-                Console.WriteLine("subscribe result:" + ret);
-                if (ret != 0)
-                {
-                    Thread.Sleep(2000);
-                }
-            } while (ret != 0);
-            //订阅主题成功,才发布消息
-            while(true)
+            //订阅主题, 最大以qos1的服务质量接收消息, 最大超时时间为10秒
+            ret = client.Subscribe(topic, DataHubClient.QOS1, 10);
+            Console.WriteLine("subscribe result:" + ret);
+
+            //发布消息
+            while (true)
             {
                 Message message = new Message();
                 //消息内容
                 message.payload = Encoding.UTF8.GetBytes(content);
-                //发布消息 参数: topic  消息    Qos消息服务质量    超时时间(单位为秒)
-                ret = client.SendRequest(topic, message, DataHubClient.QOS_LEVEL_EXACTLY_ONCE, 10);
+                //发布qos1消息, 超时时间为10s
+                ret = client.SendRequest(topic, message,
+                        DataHubClient.QOS1, 10);
                 Console.WriteLine("SendRequest result:" + ret);
                 Thread.Sleep(2000);
             }
@@ -79,17 +76,19 @@ namespace ConsoleApplication1
         }
 
         //连接状态改变的回调函数
-        static void client_ConnectionStatusChanged(object sender, ConnectionStatusChangedEventArgs e)
+        static void client_ConnectionStatusChanged(object sender,
+                ConnectionStatusChangedEventArgs e)
         {
-            Console.WriteLine("client_ConnectionStatusChanged:" + e.IsConnected);
+            Console.WriteLine("client_ConnectionStatusChanged:" +
+                    e.IsConnected);
         }
 
-        /// <summary>
-        /// 收到消息时的回调函数，可通过e.Message查看收到的具体消息内容
-        /// </summary>
-        private static void client_MessageReceived(object sender, MessageEventArgs e)
+        // 收到消息时的回调函数，可通过e.Message查看收到的具体消息内容
+        private static void client_MessageReceived(object sender,
+                MessageEventArgs e)
         {
-            Console.WriteLine("Topic=" + e.Topic + ",Message=" + Encoding.UTF8.GetString(e.Message));
+            Console.WriteLine("Topic=" + e.Topic + ",Message=" +
+                    Encoding.UTF8.GetString(e.Message));
         }
     }
 }
