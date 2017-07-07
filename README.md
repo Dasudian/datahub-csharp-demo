@@ -16,9 +16,8 @@
 该目录下有最新的SDK库，支持.NET Framework 4及以上版本。
 
 ## docs目录
-该目录下有关于SDK的文档。
 
-[API文档](./docs/API.md)
+该目录下有关于SDK API的文档。
 
 # 编译和运行
 
