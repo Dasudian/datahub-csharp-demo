@@ -23,72 +23,69 @@ namespace ConsoleApplication1
 
         static void Main(string[] args)
         {
-            // 大数点IoT DataHub云端地址，
-            // 请联系大数点商务support@dasudian.com获取
+            // 服务器地址，如果不设置该地址，则使用大数点公有云服务器
             string serverURL = "tcp://www.example.com:1883";
-            // instance id, 标识客户的唯一ID，
-            // 请联系大数点商务support@dasudian.com获取
+            // 从大数点客服务获取的instanceId
             string instanceId = "yourInstanceId";
-            // instance key, 与客户标识相对应的安全密钥，
-            // 请联系大数点商务support@dasudian.com获取
+            // 从大数点客服获取的instanceKey
             string instanceKey = "yourInstanceKey";
             // 客户端唯一ID，不同的客户端ID不能相同
             string clientId = "test_csharp_client";
             //客户端名字
-            string userName = clientId;
+            string clientType = "sensor";
 
-            //打开追踪
-            Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
-            Trace.AutoFlush = true;
-
+       
             //创建客户端实例
-            client = new DataHubClient.Builder(instanceId,
-                    instanceKey, userName, clientId)
-                .SetServerURL(serverURL)
-                .Build();
+            client = new DataHubClient.Builder(instanceId, instanceKey, clientType, clientId)
+                .SetServerURL(serverURL).SetDebug(true).SetCleanSession(true).Build();
             //接收到消息的回调函数
             client.MessageReceived += client_MessageReceived;
             //连接状态改变的回调函数
             client.ConnectionStatusChanged += client_ConnectionStatusChanged;
 
-            string topic = "mytopic";
+            string topic = "topic";
             int ret;
-            string content = "SendRequest content";
 
-            //订阅主题, 最大以qos1的服务质量接收消息, 最大超时时间为10秒
-            ret = client.Subscribe(topic, DataHubClient.QOS1, 10);
-            Console.WriteLine("subscribe result:" + ret);
+            String content = "{\"name\":\"zs\",\"data_num\":50,\"thread_num\":10,\"time_interval\":0}";
 
-            //发布消息
+            do
+            {
+                //订阅主题 参数为: topic    Qos消息服务质量    超时时间(单位秒)     
+                ret = client.Subscribe(topic, DataHubClient.QOS_LEVEL_EXACTLY_ONCE, 10);
+                Console.WriteLine("subscribe result:" + ret);
+                if (ret != 0)
+                {
+                    Thread.Sleep(2000);
+                }
+            } while (ret != 0);
+            //订阅主题成功,才发布消息
             while (true)
             {
                 Message message = new Message();
                 //消息内容
                 message.payload = Encoding.UTF8.GetBytes(content);
-                //发布qos1消息, 超时时间为10s
-                ret = client.SendRequest(topic, message,
-                        DataHubClient.QOS1, 10);
+                //发布消息 参数: topic  消息    Qos消息服务质量    超时时间(单位为秒)
+                ret = client.SendRequest(topic, message, DataHubClient.QOS_LEVEL_EXACTLY_ONCE, 10, Constants.JSON);
                 Console.WriteLine("SendRequest result:" + ret);
                 Thread.Sleep(2000);
             }
             //客户端关闭,断开与服务器连接
             client.Destroy();
+
         }
 
         //连接状态改变的回调函数
-        static void client_ConnectionStatusChanged(object sender,
-                ConnectionStatusChangedEventArgs e)
+        static void client_ConnectionStatusChanged(object sender, ConnectionStatusChangedEventArgs e)
         {
-            Console.WriteLine("client_ConnectionStatusChanged:" +
-                    e.IsConnected);
+            Console.WriteLine("client_ConnectionStatusChanged:" + e.IsConnected);
         }
 
-        // 收到消息时的回调函数，可通过e.Message查看收到的具体消息内容
-        private static void client_MessageReceived(object sender,
-                MessageEventArgs e)
+        /// <summary>
+        /// 收到消息时的回调函数，可通过e.Message查看收到的具体消息内容
+        /// </summary>
+        private static void client_MessageReceived(object sender, MessageEventArgs e)
         {
-            Console.WriteLine("Topic=" + e.Topic + ",Message=" +
-                    Encoding.UTF8.GetString(e.Message));
+            Console.WriteLine("Topic=" + e.Topic + ",Message=" + Encoding.UTF8.GetString(e.Message));
         }
     }
 }
