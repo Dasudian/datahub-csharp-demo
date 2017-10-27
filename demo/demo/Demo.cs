@@ -34,10 +34,7 @@ namespace ConsoleApplication1
             //客户端名字
             string clientType = "sensor";
 
-            //打开追踪
-            Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
-            Trace.AutoFlush = true;
-
+       
             //创建客户端实例
             client = new DataHubClient.Builder(instanceId, instanceKey, clientType, clientId)
                 .SetServerURL(serverURL).SetDebug(true).SetCleanSession(true).Build();
@@ -46,55 +43,10 @@ namespace ConsoleApplication1
             //连接状态改变的回调函数
             client.ConnectionStatusChanged += client_ConnectionStatusChanged;
 
-            string topic = "justTopic";
+            string topic = "topic";
             int ret;
-            string content = "only test";
 
-            String content2 = "[\n" +
-                  " {\n" +
-                  " \"id\":\"01\",\n" +
-                  " \"open\":false,\n" +
-                  " \"pId\":\"0\",\n" +
-                  " \"name\":\"A部门\"\n" +
-                  " },\n" +
-                  " {\n" +
-                  " \"id\":\"01\",\n" +
-                  " \"open\":false,\n" +
-                  " \"pId\":\"0\",\n" +
-                  " \"name\":\"A部门\"\n" +
-                  " },\n" +
-                  " {\n" +
-                  " \"id\":\"011\",\n" +
-                  " \"open\":false,\n" +
-                  " \"pId\":\"01\",\n" +
-                  " \"name\":\"A部门\"\n" +
-                  " },\n" +
-                  " {\n" +
-                  " \"id\":\"03\",\n" +
-                  " \"open\":false,\n" +
-                  " \"pId\":\"0\",\n" +
-                  " \"name\":\"A部门\"\n" +
-                  " },\n" +
-                  " {\n" +
-                  " \"id\":\"04\",\n" +
-                  " \"open\":false,\n" +
-                  " \"pId\":\"0\",\n" +
-                  " \"name\":\"A部门\"\n" +
-                  " },\n" +
-                  " {\n" +
-                  " \"id\":\"05\",\n" +
-                  " \"open\":false,\n" +
-                  " \"pId\":\"0\",\n" +
-                  " \"name\":\"A部门\"\n" +
-                  " },\n" +
-                  " {\n" +
-                  " \"id\":\"06\",\n" +
-                  " \"open\":false,\n" +
-                  " \"pId\":\"0\",\n" +
-                  " \"name\":\"A部门\"\n" +
-                  " }\n" +
-                  "]\n" +
-                  "\n";
+            String content = "{\"name\":\"zs\",\"data_num\":50,\"thread_num\":10,\"time_interval\":0}";
 
             do
             {
@@ -111,7 +63,7 @@ namespace ConsoleApplication1
             {
                 Message message = new Message();
                 //消息内容
-                message.payload = Encoding.UTF8.GetBytes(content2);
+                message.payload = Encoding.UTF8.GetBytes(content);
                 //发布消息 参数: topic  消息    Qos消息服务质量    超时时间(单位为秒)
                 ret = client.SendRequest(topic, message, DataHubClient.QOS_LEVEL_EXACTLY_ONCE, 10, Constants.JSON);
                 Console.WriteLine("SendRequest result:" + ret);
